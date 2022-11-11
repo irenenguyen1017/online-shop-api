@@ -1,0 +1,5 @@
+FLASK_APP=online-shop-api
+FLASK_RUN_HOST=localhost
+FLASK_RUN_PORT=3000
+FLASK_ENV=development
+FLASK_DEBUG=1
