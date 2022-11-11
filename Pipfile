@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
+flask-smorest = "*"
+python-dotenv = "*"
 
 [dev-packages]
 black = ">=22.8.0"
