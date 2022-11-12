@@ -11,6 +11,7 @@ python-dotenv = "*"
 flask-cors = "*"
 sqlalchemy-utils = "*"
 marshmallow = "*"
+flask-jwt-extended = "*"
 
 [dev-packages]
 black = ">=22.8.0"
