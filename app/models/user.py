@@ -1,3 +1,9 @@
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+)
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy_utils import EmailType
 
 from app.database import db
@@ -20,6 +26,30 @@ class UserModel(db.Model):  # type: ignore
 
     def __repr__(self):
         return f"UserModal(name={self.name}, email={self.email}, role={self.role})"
+
+    @classmethod
+    def find_by_id(cls, user_id: int) -> "UserModel":
+        return cls.query.filter_by(id=user_id).first()
+
+    @classmethod
+    def find_by_email(cls, user_email: str) -> "UserModel":
+        return cls.query.filter_by(email=user_email).first()
+
+    @classmethod
+    def get_current_user(cls) -> "UserModel":
+        user_id: int = get_jwt_identity()
+
+        return cls.find_by_id(user_id)
+
+    def create_tokens(self):
+        return {
+            "access_token": create_access_token(
+                identity=self.id,
+                additional_claims={"is_admin": self.is_admin()},
+                fresh=True,
+            ),
+            "refresh_token": create_refresh_token(identity=self.id),
+        }
 
     def is_admin(self):
         return self.role == Role.admin
