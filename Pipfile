@@ -12,6 +12,7 @@ flask-cors = "*"
 sqlalchemy-utils = "*"
 marshmallow = "*"
 flask-jwt-extended = "*"
+flask-bcrypt = "*"
 
 [dev-packages]
 black = ">=22.8.0"

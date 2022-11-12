@@ -1,10 +1,38 @@
 from flask.views import MethodView
-from flask_smorest import Blueprint
+from flask_bcrypt import generate_password_hash
+from flask_smorest import Blueprint, abort
+from sqlalchemy.exc import SQLAlchemyError
+
+from app.models.user import UserModel
+from app.schemas import UserSchema
 
 user_blueprint = Blueprint("user", __name__, description="Operations for users.")
 
 
-@user_blueprint.route("/users")
-class Users(MethodView):
-    def get(self):
-        pass
+@user_blueprint.route("/register")
+class UserRegister(MethodView):
+    @user_blueprint.arguments(UserSchema)
+    def post(self, user_data):
+        exist_user = UserModel.find_by_email(user_data["email"])
+
+        if exist_user:
+            abort(409, message="A user with that email already exists.")
+
+        new_user = UserModel(
+            name=user_data["name"],
+            email=user_data["email"],
+            role=user_data["role"] if "role" in user_data else None,
+            password=generate_password_hash(user_data["password"]),
+        )
+
+        try:
+            new_user.save()
+
+            tokens = new_user.create_tokens()
+
+            return tokens
+        except SQLAlchemyError:
+            abort(
+                500,
+                message="Something wrong happened when registering new user. Please try again.",
+            )
