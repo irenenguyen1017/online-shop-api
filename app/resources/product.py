@@ -1,14 +1,17 @@
 from flask.views import MethodView
+from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.product import ProductModel
 from app.schemas import (
     BaseProductSchema,
+    CommentSchema,
     ProductSchema,
     ProductSearchSchema,
     ProductUpdateSchema,
 )
+from app.utils import admin_required
 
 NO_PRODUCT_FOUND_MESSAGE = "No product found."
 
@@ -31,6 +34,7 @@ class Product(MethodView):
 
     @product_blueprint.arguments(ProductUpdateSchema)
     @product_blueprint.response(201, ProductSchema(exclude=["comments"]))
+    @admin_required()
     def put(self, product_data, product_id):
         product = ProductModel.find_by_id(product_id)
 
@@ -53,6 +57,7 @@ class Product(MethodView):
         else:
             abort(404, message="Cannot find product with provided id.")
 
+    @admin_required()
     def delete(self, product_id):
         product = ProductModel.find_by_id(product_id)
 
@@ -84,6 +89,7 @@ class ProductList(MethodView):
         else:
             abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
 
+    @admin_required()
     @product_blueprint.arguments(ProductSchema)
     @product_blueprint.response(200, BaseProductSchema)
     def post(self, product_data):
@@ -106,3 +112,16 @@ class ProductList(MethodView):
                     500,
                     message="Something wrong happened when adding new product. Please try again later",
                 )
+
+
+@product_blueprint.route("/product/<int:product_id>/comments")
+class ProductComments(MethodView):
+    @product_blueprint.response(200, CommentSchema(exclude=["product"], many=True))
+    def get(self, product_id):
+
+        product = ProductModel.find_by_id(product_id)
+
+        if product:
+            return product.comments
+        else:
+            abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
