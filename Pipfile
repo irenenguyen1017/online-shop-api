@@ -8,6 +8,7 @@ flask = "*"
 flask-sqlalchemy = "*"
 flask-smorest = "*"
 python-dotenv = "*"
+flask-cors = "*"
 
 [dev-packages]
 black = ">=22.8.0"
