@@ -1,8 +1,10 @@
 from flask.views import MethodView
 from flask_bcrypt import check_password_hash, generate_password_hash
+from flask_jwt_extended import get_jwt, jwt_required
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
+from app.blocklist import BLOCKLIST
 from app.models.user import UserModel
 from app.schemas import UserLoginSchema, UserSchema
 
@@ -55,3 +57,14 @@ class UserLogin(MethodView):
                 return tokens
 
         abort(401, message="Invalid email or password. Please try again.")
+
+
+@user_blueprint.route("/logout")
+class UserLogout(MethodView):
+    @jwt_required()
+    def post(self):
+        jti = get_jwt().get("jti")
+
+        BLOCKLIST.add(jti)
+
+        return {"message": "Succesfully logged out."}
