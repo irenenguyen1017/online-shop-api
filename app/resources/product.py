@@ -3,7 +3,7 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.product import ProductModel
-from app.schemas import ProductSchema, ProductUpdateSchema
+from app.schemas import ProductSchema, ProductSearchSchema, ProductUpdateSchema
 
 NO_PRODUCT_FOUND_MESSAGE = "No product found."
 
@@ -61,5 +61,20 @@ class Product(MethodView):
                     500,
                     message="Something wrong happened when deleting product. Please try again.",
                 )
+        else:
+            abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
+
+
+@product_blueprint.route("/product")
+class ProductList(MethodView):
+    @product_blueprint.arguments(ProductSearchSchema)
+    @product_blueprint.response(200, ProductSchema(many=True))
+    def get(self, product_data):
+        products = ProductModel.search_product(
+            name=product_data["name"] if "name" in product_data else None,
+        )
+
+        if products:
+            return products
         else:
             abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
