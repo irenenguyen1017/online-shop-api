@@ -23,3 +23,27 @@ class Product(MethodView):
             return product
         else:
             abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
+
+    @product_blueprint.arguments(ProductUpdateSchema)
+    @product_blueprint.response(201, ProductSchema(exclude=["comments"]))
+    def put(self, product_data, product_id):
+        product = ProductModel.find_by_id(product_id)
+
+        if product:
+            try:
+                product.update(
+                    name=product_data["name"] if "name" in product_data else None,
+                    description=product_data["description"]
+                    if "description" in product_data
+                    else None,
+                    price=product_data["price"] if "price" in product_data else None,
+                )
+
+                return product
+            except SQLAlchemyError:
+                abort(
+                    500,
+                    message="Something wrong happened when updating product. Please try again.",
+                )
+        else:
+            abort(404, message="Cannot find product with provided id.")
