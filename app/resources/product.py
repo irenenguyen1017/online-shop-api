@@ -3,7 +3,12 @@ from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
 from app.models.product import ProductModel
-from app.schemas import ProductSchema, ProductSearchSchema, ProductUpdateSchema
+from app.schemas import (
+    BaseProductSchema,
+    ProductSchema,
+    ProductSearchSchema,
+    ProductUpdateSchema,
+)
 
 NO_PRODUCT_FOUND_MESSAGE = "No product found."
 
@@ -78,3 +83,26 @@ class ProductList(MethodView):
             return products
         else:
             abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
+
+    @product_blueprint.arguments(ProductSchema)
+    @product_blueprint.response(200, BaseProductSchema)
+    def post(self, product_data):
+        product = ProductModel(**product_data)
+
+        exist_product = ProductModel.find_by_name(product_data["name"])
+
+        if exist_product:
+            abort(
+                400,
+                message=f"The product with name: '{product_data['name']}' already exists",
+            )
+        else:
+            try:
+                product.save()
+
+                return product
+            except SQLAlchemyError:
+                abort(
+                    500,
+                    message="Something wrong happened when adding new product. Please try again later",
+                )
