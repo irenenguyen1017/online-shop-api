@@ -47,3 +47,19 @@ class Product(MethodView):
                 )
         else:
             abort(404, message="Cannot find product with provided id.")
+
+    def delete(self, product_id):
+        product = ProductModel.find_by_id(product_id)
+
+        if product:
+            try:
+                product.delete()
+
+                return {"message": "Product successfully deleted."}
+            except SQLAlchemyError:
+                abort(
+                    500,
+                    message="Something wrong happened when deleting product. Please try again.",
+                )
+        else:
+            abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
