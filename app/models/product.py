@@ -19,6 +19,25 @@ class ProductModel(db.Model):  # type: ignore
     def __repr__(self):
         return f"ProductModel(name={self.name}, price={self.price}, description={self.description})"
 
+    @classmethod
+    def find_by_name(cls, name: str) -> List["ProductModel"]:
+        return cls.query.filter(cls.name.like("%" + name + "%")).all()
+
+    @classmethod
+    def search_product(cls, name: str | None = None) -> List["ProductModel"]:
+        if name:
+            return cls.find_by_name(name)
+        else:
+            return cls.find_all()
+
+    @classmethod
+    def find_by_id(cls, product_id) -> "ProductModel":
+        return cls.query.filter_by(id=product_id).first()
+
+    @classmethod
+    def find_all(cls) -> List["ProductModel"]:
+        return cls.query.all()
+
     def update(
         self,
         name: str | None = None,
