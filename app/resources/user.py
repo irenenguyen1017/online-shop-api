@@ -6,7 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from app.blocklist import BLOCKLIST
 from app.models.user import UserModel
-from app.schemas import UserLoginSchema, UserSchema
+from app.schemas import UserLoginSchema, UserPasswordUpdateSchema, UserSchema
 
 user_blueprint = Blueprint("user", __name__, description="Operations for users.")
 
@@ -68,3 +68,30 @@ class UserLogout(MethodView):
         BLOCKLIST.add(jti)
 
         return {"message": "Succesfully logged out."}
+
+
+@user_blueprint.route("/reset-password")
+class UserResetPassword(MethodView):
+    @jwt_required()
+    @user_blueprint.arguments(UserPasswordUpdateSchema)
+    def post(self, user_data):
+        user = UserModel.get_current_user()
+
+        is_valid_password = check_password_hash(
+            user.password, user_data["current_password"]
+        )
+
+        if is_valid_password:
+            try:
+                user.update(
+                    password=generate_password_hash(user_data["new_password"]),
+                )
+
+                return {"message": "New password successfully updated."}
+            except SQLAlchemyError:
+                abort(
+                    500,
+                    message="Something wrong happened when registering new user. Please try again.",
+                )
+
+        abort(401, message="You provided a wrong current password")
