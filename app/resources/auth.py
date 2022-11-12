@@ -19,12 +19,18 @@ from app.schemas import (
     UserUpdateSchema,
 )
 
-user_blueprint = Blueprint("user", __name__, description="Operations for users.")
+auth_blueprint = Blueprint(
+    "auth", __name__, description="Operations for authentication."
+)
 
 
-@user_blueprint.route("/register")
+@auth_blueprint.route("/register")
 class UserRegister(MethodView):
-    @user_blueprint.arguments(UserSchema)
+    """
+    Register new user API endpoint
+    """
+
+    @auth_blueprint.arguments(UserSchema)
     def post(self, user_data):
         exist_user = UserModel.find_by_email(user_data["email"])
 
@@ -51,10 +57,14 @@ class UserRegister(MethodView):
             )
 
 
-@user_blueprint.route("/user")
+@auth_blueprint.route("/user")
 class UserUpdate(MethodView):
+    """
+    Update user API endpoint
+    """
+
     @jwt_required()
-    @user_blueprint.arguments(UserUpdateSchema)
+    @auth_blueprint.arguments(UserUpdateSchema)
     def put(self, user_data):
         current_user = UserModel.get_current_user()
 
@@ -82,9 +92,13 @@ class UserUpdate(MethodView):
                 )
 
 
-@user_blueprint.route("/login")
+@auth_blueprint.route("/login")
 class UserLogin(MethodView):
-    @user_blueprint.arguments(UserLoginSchema)
+    """
+    Login API endpoint
+    """
+
+    @auth_blueprint.arguments(UserLoginSchema)
     def post(self, user_data):
         user = UserModel.find_by_email(user_data["email"])
 
@@ -101,8 +115,12 @@ class UserLogin(MethodView):
         abort(401, message="Invalid email or password. Please try again.")
 
 
-@user_blueprint.route("/logout")
+@auth_blueprint.route("/logout")
 class UserLogout(MethodView):
+    """
+    Logout API endpoint
+    """
+
     @jwt_required()
     def post(self):
         jti = get_jwt().get("jti")
@@ -112,10 +130,14 @@ class UserLogout(MethodView):
         return {"message": "Succesfully logged out."}
 
 
-@user_blueprint.route("/reset-password")
+@auth_blueprint.route("/reset-password")
 class UserResetPassword(MethodView):
+    """
+    Reset password API endpoint
+    """
+
     @jwt_required()
-    @user_blueprint.arguments(UserPasswordUpdateSchema)
+    @auth_blueprint.arguments(UserPasswordUpdateSchema)
     def post(self, user_data):
         user = UserModel.get_current_user()
 
@@ -139,10 +161,14 @@ class UserResetPassword(MethodView):
         abort(401, message="You provided a wrong current password")
 
 
-@user_blueprint.route("/user-info")
+@auth_blueprint.route("/user-info")
 class UserInfo(MethodView):
+    """
+    Get current logged in user info API endpoint
+    """
+
     @jwt_required()
-    @user_blueprint.response(200, BaseUserSchema)
+    @auth_blueprint.response(200, BaseUserSchema)
     def get(self):
         user = UserModel.get_current_user()
 
@@ -152,8 +178,12 @@ class UserInfo(MethodView):
         abort(400, message="No user data found.")
 
 
-@user_blueprint.route("/refresh")
+@auth_blueprint.route("/refresh")
 class UserRefresh(MethodView):
+    """
+    Refresh token API endpoint
+    """
+
     @jwt_required()
     def post(self):
         current_user = get_jwt_identity()

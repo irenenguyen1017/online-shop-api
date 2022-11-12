@@ -1,5 +1,4 @@
 from flask.views import MethodView
-from flask_jwt_extended import jwt_required
 from flask_smorest import Blueprint, abort
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -22,6 +21,10 @@ product_blueprint = Blueprint(
 
 @product_blueprint.route("/product/<int:product_id>")
 class Product(MethodView):
+    """
+    Get product by ID API endpoint
+    """
+
     @product_blueprint.response(200, ProductSchema)
     def get(self, product_id):
 
@@ -31,6 +34,10 @@ class Product(MethodView):
             return product
         else:
             abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
+
+    """
+    Update product by ID API endpoint
+    """
 
     @product_blueprint.arguments(ProductUpdateSchema)
     @product_blueprint.response(201, ProductSchema(exclude=["comments"]))
@@ -57,6 +64,10 @@ class Product(MethodView):
         else:
             abort(404, message="Cannot find product with provided id.")
 
+    """
+    Delete product by ID API endpoint
+    """
+
     @admin_required()
     def delete(self, product_id):
         product = ProductModel.find_by_id(product_id)
@@ -77,6 +88,10 @@ class Product(MethodView):
 
 @product_blueprint.route("/product")
 class ProductList(MethodView):
+    """
+    Search product API endpoint
+    """
+
     @product_blueprint.arguments(ProductSearchSchema)
     @product_blueprint.response(200, ProductSchema(many=True))
     def get(self, product_data):
@@ -88,6 +103,10 @@ class ProductList(MethodView):
             return products
         else:
             abort(404, message=NO_PRODUCT_FOUND_MESSAGE)
+
+    """
+    Create a new product API endpoint
+    """
 
     @admin_required()
     @product_blueprint.arguments(ProductSchema)
@@ -116,6 +135,10 @@ class ProductList(MethodView):
 
 @product_blueprint.route("/product/<int:product_id>/comments")
 class ProductComments(MethodView):
+    """
+    Get all comments for a product API endpoint
+    """
+
     @product_blueprint.response(200, CommentSchema(exclude=["product"], many=True))
     def get(self, product_id):
 
