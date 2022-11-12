@@ -8,7 +8,7 @@ load_dotenv(path.join(basedir, ".flaskenv"))
 
 class Config:
     PROPAGATE_EXCEPTIONS = True
-    API_TITLE = "Local store RestAPI"
+    API_TITLE = "Online shop API"
     API_VERSION = "v1"
 
 

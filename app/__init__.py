@@ -1,13 +1,15 @@
 from flask import Flask, jsonify
+from flask_bcrypt import Bcrypt
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
+from flask_seeder import FlaskSeeder
 from flask_smorest import Api
 
 from app.blocklist import BLOCKLIST
 from app.database import db
+from app.resources.auth import auth_blueprint
 from app.resources.comment import comment_blueprint
 from app.resources.product import product_blueprint
-from app.resources.user import user_blueprint
 
 
 def create_app() -> Flask:
@@ -16,6 +18,9 @@ def create_app() -> Flask:
     app.config.from_object("app.config.DevConfig")
     db.init_app(app)
     api = Api(app)
+
+    seeder = FlaskSeeder()
+    seeder.init_app(app, db)
 
     jwt = JWTManager(app)
 
@@ -51,12 +56,11 @@ def create_app() -> Flask:
             401,
         )
 
-    @app.before_first_request
-    def create_tables():
+    with app.app_context():
         db.create_all()
 
     api.register_blueprint(comment_blueprint)
     api.register_blueprint(product_blueprint)
-    api.register_blueprint(user_blueprint)
+    api.register_blueprint(auth_blueprint)
 
     return app

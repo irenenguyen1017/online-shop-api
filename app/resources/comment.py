@@ -14,6 +14,10 @@ comment_blueprint = Blueprint(
 
 @comment_blueprint.route("/comment")
 class CommentList(MethodView):
+    """
+    Create new comment API endpoint
+    """
+
     @comment_blueprint.arguments(CommentSchema)
     @jwt_required()
     def post(self, comment_data):
