@@ -13,6 +13,7 @@ sqlalchemy-utils = "*"
 marshmallow = "*"
 flask-jwt-extended = "*"
 flask-bcrypt = "*"
+bleach = "*"
 
 [dev-packages]
 black = ">=22.8.0"
