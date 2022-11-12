@@ -3,7 +3,6 @@ from flask_jwt_extended import (
     create_refresh_token,
     get_jwt_identity,
 )
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy_utils import EmailType
 
 from app.database import db
