@@ -28,3 +28,5 @@ class DevConfig(Config):
     OPENAPI_SWAGGER_UI_PATH = "/"
     OPENAPI_SWAGGER_UI_URL = "https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.24.2/"
     OPENAPI_URL_PREFIX = "/"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///local-store.db"
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
