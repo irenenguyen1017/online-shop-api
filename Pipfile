@@ -9,6 +9,8 @@ flask-sqlalchemy = "*"
 flask-smorest = "*"
 python-dotenv = "*"
 flask-cors = "*"
+sqlalchemy-utils = "*"
+marshmallow = "*"
 
 [dev-packages]
 black = ">=22.8.0"
