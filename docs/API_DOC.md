@@ -6,7 +6,7 @@
 
 Operations for comments.
 
-## Create new comment
+## Create new comment (Login required)
 
 > Code samples
 
@@ -666,7 +666,7 @@ print(r.json())
 This operation does not require authentication
 </aside>
 
-## Reset password
+## Reset password (Login required)
 
 > Code samples
 
@@ -725,7 +725,7 @@ print(r.json())
 This operation does not require authentication
 </aside>
 
-## Get current user infomation
+## Get current user infomation (Login required)
 
 > Code samples
 
@@ -767,7 +767,7 @@ print(r.json())
 This operation does not require authentication
 </aside>
 
-## Refresh token
+## Refresh token (Login required)
 
 > Code samples
 
