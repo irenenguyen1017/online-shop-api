@@ -23,7 +23,7 @@ class DataSeeder(Seeder):
                 "name": generator.Name(),
                 "email": "admin@test.com",
                 "role": Role.admin,
-                "password": generate_password_hash("123"),
+                "password": generate_password_hash("admin"),
             },
         )
 
@@ -37,7 +37,7 @@ class DataSeeder(Seeder):
                 "name": generator.Name(),
                 "email": "user@test.com",
                 "role": Role.user,
-                "password": generate_password_hash("123"),
+                "password": generate_password_hash("user"),
             },
         )
 
