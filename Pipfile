@@ -15,7 +15,6 @@ flask-jwt-extended = "*"
 flask-bcrypt = "*"
 bleach = "*"
 flask-seeder = "*"
-psycopg2 = "*"
 
 [dev-packages]
 black = ">=22.8.0"
