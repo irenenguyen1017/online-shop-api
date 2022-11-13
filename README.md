@@ -104,22 +104,6 @@ There are 3 main schema models
 
 - `Comment`: Contains details about the comments. `Comment` model has many-to-one relationship with `User` model and `Product` model.
 
-### Object Relational Mapping (ORM)
-
-This application use `Object Relational Mapping (ORM)`, a technique that lets you query and manipulates data from a database using an object-oriented paradigm.
-
-The `ORM` generates objects (as in OOP) that virtually map the tables in the database. Then the programmer would use these objects to interact and play with the database. So the core idea is to try and shield the programmer from having to write optimized and complex SQL code — the ORM-generated objects take care of that task.
-
-**Advantages of ORM**
-
-- They create accurate and efficient SQL queries, saving developers the trouble.
-
-- Because developers can conceptualise and work with data as objects, they make code easier to update, maintain, and reuse.
-
-- Since the framework will filter the data for you, ORMs will protect your application from SQL injection attacks
-
-- Database abstraction, a feature of ORMs, facilitates database change and establishes a unified code base for your application.
-
 ## Third party libraries
 
 - [**flask**](https://flask.palletsprojects.com/en/2.2.x/): The Python micro framework for building web applications.
@@ -141,21 +125,3 @@ The `ORM` generates objects (as in OOP) that virtually map the tables in the dat
 - [**bleach**](https://bleach.readthedocs.io/en/latest/): An allowed-list-based HTML sanitizing library that escapes or strips markup and attributes.
 
 - [**flask-seeder**](https://github.com/diddi-/flask-seeder): Flask extension for seeding database
-
-## Implementation plans and tasks tracking
-
-### Project initial setup
-
-![Project setup](docs/images/setup_project_task.png)
-
-### Authentication endpoints implementation
-
-![Authentication endpoints](docs/images/authentication_endpoints_task.png)
-
-### Product endpoints implementation
-
-![Product endpoints](docs/images/product_endpoints_tasks.png)
-
-### Comment endpoints implementation
-
-![Product endpoints](docs/images/comment_endpoints_task.png)
