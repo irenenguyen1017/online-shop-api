@@ -1,19 +1,5 @@
 ---
 title: Online store API v1
-language_tabs:
-  - python: Python
-language_clients:
-  - python: ""
-toc_footers: []
-includes: []
-search: false
-highlight_theme: darkula
-headingLevel: 1
-
----
-
-<!-- Generator: Widdershins v4.0.1 -->
-
 <h1 id="online-store-api">Online store API v1</h1>
 
 > Scroll down for code samples, example requests and responses. Select a language for code samples from the tabs above or the mobile navigation menu.
